@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizador de Topologia de Rede</title>
+    <title>Visualizador de Topologia de Rede - V1.6.9</title>
     
-    <!-- Leaflet.js (CSS) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
         /* Define a altura do mapa */
-        #map { height: 60vh; border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        #map { height: 70vh; border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         body { font-family: 'Inter', sans-serif; }
         
         /* Estilos das Abas */
@@ -93,15 +92,14 @@
             color: #000000;
             font-weight: bold;
             font-size: 11px;
-            /* Sombra para legibilidade em cima de outras cores */
             text-shadow: 1px 1px 2px #fff, -1px -1px 2px #fff, 1px -1px 2px #fff, -1px 1px 2px #fff;
         }
 
-        /* NOVO: Estilos para controles customizados do Leaflet */
+        /* Estilos para controles customizados do Leaflet */
         .leaflet-control-resetzoom a,
         .leaflet-control-northarrow div {
-            width: 30px; /* Padrão do Leaflet */
-            height: 30px; /* Padrão do Leaflet */
+            width: 30px;
+            height: 30px;
             background-color: #fff;
             display: flex;
             align-items: center;
@@ -117,9 +115,8 @@
         }
         .leaflet-control-northarrow div {
             cursor: default;
-            padding-top: 2px; /* Ajuste fino para o SVG */
+            padding-top: 2px;
         }
-        /* Garante que os novos controles se pareçam com os botões de zoom */
         .leaflet-bar a, .leaflet-bar div {
              border-bottom: 1px solid #ccc;
         }
@@ -132,39 +129,31 @@
 
 <body class="bg-gray-100 text-gray-800">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto p-4 md:p-8"> 
         
         <header class="text-center mb-6">
             <h1 class="text-3xl md:text-4xl font-bold text-blue-700">Visualizador de Topologia de Rede</h1>
-            <p class="text-md text-gray-600 mt-1">Carregue os arquivos CSV para gerar o mapa e as tabelas.</p>
+            <p class="text-md text-gray-600 mt-1">Carregue os arquivos CSV para gerar o mapa e as tabelas. (V1.6.9)</p>
         </header>
 
-        <!-- Seção de Upload -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-            <!-- Grid atualizado para 5 colunas -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                 
-                <!-- File 1: Rádio -->
                 <div class="md:col-span-1">
                     <label for="csvRadio" class="block text-sm font-medium text-gray-700 mb-1">1. Rádio (Delimitador: ;)</label>
                     <input type="file" id="csvRadio" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors">
                 </div>
                 
-                <!-- File 2: Switch -->
                 <div class="md:col-span-1">
                     <label for="csvSwitch" class="block text-sm font-medium text-gray-700 mb-1">2. Switch (Delimitador: ;)</label>
                     <input type="file" id="csvSwitch" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors">
                 </div>
                 
-                <!-- File 3: Seriais -->
                 <div class="md:col-span-1">
                     <label for="csvSeriais" class="block text-sm font-medium text-gray-700 mb-1">3. Seriais (Delimitador: ;)</label>
                     <input type="file" id="csvSeriais" accept=".csv" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition-colors">
                 </div>
 
-                <!-- REMOVIDO: File 4: Setor -->
-                
-                <!-- Seletor de Raio -->
                 <div class="md:col-span-1">
                     <label for="sectorRadius" class="block text-sm font-medium text-gray-700 mb-1">Raio Setor (m)</label>
                     <select id="sectorRadius" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md py-2 px-3 focus:ring-blue-500 focus:border-blue-500 transition-colors">
@@ -174,142 +163,115 @@
                     </select>
                 </div>
                 
-                <!-- Botão de Geração (col-span-1) -->
-                <button id="generateButton" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors shadow-sm md:col-span-1">
+                <button id="generateButton" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors shadow-sm md:col-span-2">
                     Gerar Topologia
                 </button>
             </div>
             
-            <!-- Mensagem de Status/Erro -->
             <div id="messageBox" class="mt-4 p-3 rounded-md text-sm text-center hidden"></div>
         </div>
 
-        <!-- Container do Mapa -->
         <div id="mapContainer" class="mb-6">
             <div id="map"></div>
         </div>
         
-        <!-- Container das Abas e Tabelas -->
         <div id="tablesContainer" class="hidden">
-            <!-- Botões das Abas -->
+            
+            <div id="exportButtonContainer" class="mb-4 text-right">
+                <button id="exportButton" class="bg-green-600 text-white py-2 px-4 rounded-md font-semibold hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-colors shadow-sm">
+                    Exportar CSV Completo
+                </button>
+            </div>
             <div class="flex border-b border-gray-300">
                 <button class="tab-button active" onclick="openTab(event, 'linksTab')">Lista de Links</button>
                 <button class="tab-button" onclick="openTab(event, 'inventoryTab')">Inventário de Nós</button>
-                <!-- REMOVIDO: Botão da Aba Azimute -->
             </div>
             
-            <!-- Conteúdo da Aba 1: Lista de Links -->
             <div id="linksTab" class="tab-content active">
                 <div class="table-container">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <!-- NOVO: Coluna Cluster -->
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Cluster</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">CEN A</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">CEN B</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Produto A</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Produto B</th>
+                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Polarization</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">TDD-POL</th>
-                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Azimute A (deg)</th>
-                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Azimute B (deg)</th>
-                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Sect-In-Device</th>
-                                <!-- NOVAS COLUNAS -->
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">TX Power A/B (dBm)</th>
-                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">RSSI (dBm) A/B</th>
-                                <!-- FIM DAS NOVAS COLUNAS -->
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Freq. A (MHz)</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Freq. B (MHz)</th>
-                                <!-- NOVO: Coluna Setor 1 (Base) -->
+                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">TX op-mode A/B</th>
+                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">RSSI (dBm) A/B</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Setor 1 (Azimute)</th>
+                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Sect-In-Device</th>
+                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Azimute A (deg)</th>
+                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Azimute B (deg)</th>
                             </tr>
                         </thead>
                         <tbody id="linkListBody" class="bg-white divide-y divide-gray-200">
-                            <!-- Linhas inseridas via JS -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
             
-            <!-- Conteúdo da Aba 2: Inventário de Nós -->
             <div id="inventoryTab" class="tab-content">
                 <div class="table-container">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <!-- NOVO: Coluna Cluster -->
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Cluster(s)</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">CEN</th>
-                                <!-- ATUALIZADO: Coluna Node ID -->
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Node ID</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Produtos</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">IPs</th>
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">VLANs</th>
-                                <!-- NOVO: Coluna Part Number -->
                                 <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Part Number</th>
-                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Seriais</th>
+                                <th scope="col" class="py-3.5 px-4 text-left text-sm font-semibold text-gray-600">Serial Number</th>
                             </tr>
                         </thead>
                         <tbody id="nodeInventoryBody" class="bg-white divide-y divide-gray-200">
-                            <!-- Linhas inseridas via JS -->
-                        </tbody>
+                            </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- REMOVIDO: Conteúdo da Aba Azimute -->
-
         </div>
 
-    </div> <!-- Fim do container -->
-
-    <!--
-    Scripts movidos para o final do <body> para garantir a ordem de carregamento
-    1. Leaflet JS
-    2. Leaflet Semicircle Plugin (depende do Leaflet)
-    3. Tailwind CSS
-    -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    </div> <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-semicircle@2.0.4/Semicircle.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Script Principal da Aplicação -->
     <script>
         // Variável global para o mapa
         let map;
-        // NOVO: Referência ao controle de camadas
         let layerControl; 
         
-        // Objeto para armazenar as camadas do mapa (para poder limpar)
         const mapLayers = {
             markers: null,
             lines: null,
-            // Novas camadas, uma para cada setor
             sectors1: null,
             sectors2: null,
             sectors3: null,
             sectors4: null
         };
-        // NOVO: Objeto para camadas de cluster dinâmicas
         let clusterLayers = {}; 
 
         // Dados globais processados
-        // ATUALIZAÇÃO: 'nodes' agora é indexado pelo NODE ID (não pelo CEN)
         let nodes = {};
         let links = [];
-        let serialMap = new Map(); // Mapa de IP -> { serial, partNumber }
-        // REMOVIDO: independentSectors = []; 
-        // REMOVIDO: sectorAzimuthMap = new Map(); 
-        let subnetVlanMap = new Map(); // NOVO: Mapa Mestre de Sub-rede -> VLAN
+        let serialMap = new Map(); 
+        let subnetVlanMap = new Map();
 
         /**
          * Inicializa o mapa Leaflet assim que a página carrega.
          */
         function initMap() {
-            if (map) return; // Não inicializa duas vezes
+            if (map) return; 
             
             try {
-                map = L.map('map').setView([-14.2350, -51.9253], 5); // Centro do Brasil (Zoom inicial 5)
+                map = L.map('map').setView([-14.2350, -51.9253], 5); 
                 const baseTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -318,60 +280,43 @@
                 mapLayers.markers = L.layerGroup().addTo(map);
                 mapLayers.lines = L.layerGroup().addTo(map);
                 
-                // Cria as 4 camadas de setores
                 mapLayers.sectors1 = L.layerGroup().addTo(map);
                 mapLayers.sectors2 = L.layerGroup().addTo(map);
                 mapLayers.sectors3 = L.layerGroup().addTo(map);
                 mapLayers.sectors4 = L.layerGroup().addTo(map);
 
-
-                // Adiciona controle de camadas (toggle)
                 const baseMaps = {
                     "OpenStreetMap": baseTileLayer
                 };
                 const overlayMaps = {
                     "Links": mapLayers.lines,
                     "Nós (Markers)": mapLayers.markers,
-                    // Novas camadas de setor
                     "Setor 1 (MH-N)": mapLayers.sectors1,
                     "Setor 2 (MH-N)": mapLayers.sectors2,
                     "Setor 3 (MH-N)": mapLayers.sectors3,
                     "Setor 4 (MH-N)": mapLayers.sectors4
-                    // Camadas de cluster são adicionadas dinamicamente
                 };
                 
-                // Salva a referência do controle de camadas
                 layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
 
-                // --- NOVO: Adiciona Controles de Reset e Norte ---
-                
-                // 1. Botão de Reset Zoom
+                // --- Adiciona Controles de Reset e Norte ---
                 const ResetZoomControl = L.Control.extend({
-                    options: {
-                        position: 'topleft'
-                    },
+                    options: { position: 'topleft' },
                     onAdd: function (map) {
                         const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-resetzoom');
                         const link = L.DomUtil.create('a', '', container);
                         link.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`;
                         link.href = '#';
                         link.title = 'Resetar Zoom';
-
                         L.DomEvent.on(link, 'click', L.DomEvent.stop);
-                        L.DomEvent.on(link, 'click', () => {
-                            map.setView([-14.2350, -51.9253], 5);
-                        });
-
+                        L.DomEvent.on(link, 'click', () => map.setView([-14.2350, -51.9253], 5));
                         return container;
                     }
                 });
                 map.addControl(new ResetZoomControl());
 
-                // 2. Seta do Norte
                 const NorthArrowControl = L.Control.extend({
-                    options: {
-                        position: 'topleft'
-                    },
+                    options: { position: 'topleft' },
                     onAdd: function (map) {
                         const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-northarrow');
                         container.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5"><path d="M12 19V5M12 5L8 9M12 5L16 9"></path><text x="12" y="4" font-size="8" fill="#333" font-weight="600" text-anchor="middle">N</text></svg>`;
@@ -383,29 +328,22 @@
                 
                 // --- Fim dos Novos Controles ---
 
-
-                // Adiciona legenda de cores (MH-N)
                 const legend = L.control({ position: 'bottomright' });
                 legend.onAdd = function (map) {
                     const div = L.DomUtil.create('div', 'info legend');
                     const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00'];
                     const labels = ['Setor 1', 'Setor 2', 'Setor 3', 'Setor 4'];
-                    
                     let legendHtml = '<div style="background:white; padding: 10px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.2);">';
                     legendHtml += '<strong style="display:block; margin-bottom: 5px;">Legenda (MH-N)</strong>';
-                    
                     const iStyle = 'width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7;';
-
                     for (let i = 0; i < labels.length; i++) {
-                        legendHtml +=
-                            `<div><i style="${iStyle} background:${colors[i]}"></i> ${labels[i]}</div>`;
+                        legendHtml += `<div><i style="${iStyle} background:${colors[i]}"></i> ${labels[i]}</div>`;
                     }
                     legendHtml += '</div>';
                     div.innerHTML = legendHtml;
                     return div;
                 };
                 legend.addTo(map);
-
 
             } catch (e) {
                 console.error("Erro ao inicializar o mapa Leaflet:", e);
@@ -423,52 +361,31 @@
             return text;
         }
         
-        // REVERSÃO: Função de Coordenadas (V5)
-        // Lida com:
-        // 1. Decimal (ponto ou vírgula): "-22.911617" ou "-22,911617"
-        // 2. Múltiplos pontos (lógica antiga): "-22.911.572" -> -22.911
-        // 3. Inteiro (novo formato): "-22914544" -> -22.914544
         const parseCoord = (val) => {
             if (!val) return NaN;
-
-            let str = String(val).trim();
-            const originalStr = str; // Salva o original para checar o formato inteiro
-
-            // 1. Lida com vírgula decimal (ex: "-22,911617" ou "-22.911,572")
-            // Troca vírgula por ponto.
-            str = str.replace(',', '.');
-
-            // 2. Lida com múltiplos pontos (ex: "-22.911.572")
-            // Este era o formato que a lógica antiga tratava.
-            const parts = str.split('.');
-            if (parts.length > 2) {
-                // Era "-22.911.572" -> parts = ["-22", "911", "572"]
-                // Queremos "-22.911"
-                str = `${parts[0]}.${parts[1]}`;
+            const strVal = val.trim();
+            if (strVal.includes('.') || strVal.includes(',')) {
+                let coord = parseFloat(strVal.replace(',', '.'));
+                if (!isNaN(coord)) {
+                    return coord;
+                }
             }
-            
-            // Converte para número
-            let coord = parseFloat(str);
-            if (isNaN(coord)) return NaN;
-
-            // 3. Lida com o formato Inteiro (ex: -22914544)
-            // Coordenadas válidas estão entre -180 e 180.
-            // Se for um número gigante, é o formato inteiro.
-            // Usamos a string original para garantir que não tinha um ponto.
-            if ((coord > 180 || coord < -180) && !originalStr.includes('.') && !originalStr.includes(',')) {
-                // Assume que o formato é DDFFFFFF (ex: -22914544)
-                // Divide por 10^6 (1,000,000) para inserir o ponto decimal.
-                return coord / 1000000; // -22.914544
+            const numVal = parseFloat(strVal);
+            if (!isNaN(numVal) && Math.abs(numVal) > 1000) { 
+                const strNum = numVal.toString();
+                const splitIndex = strNum.startsWith('-') ? 3 : 2; 
+                const result = parseFloat(strNum.substring(0, splitIndex) + '.' + strNum.substring(splitIndex));
+                
+                if (!isNaN(result)) {
+                    return result;
+                }
             }
-
-            // Retorna o valor de (1) ou (2)
-            return coord;
+            return parseFloat(strVal.replace(',', '.'));
         };
 
 
         /**
          * Converte texto CSV em um array de objetos.
-         * A primeira linha é usada como cabeçalho.
          */
         async function parseCSV(file, delimiter = ';') {
             return new Promise((resolve, reject) => {
@@ -478,11 +395,9 @@
                         const csvText = event.target.result;
                         const cleanedText = cleanCSVText(csvText);
                         
-                        // Divide por quebras de linha (incluindo \r\n e \n)
                         const lines = cleanedText.split(/\r?\n/).filter(line => line.trim() !== '');
 
                         if (lines.length === 0) {
-                            // Arquivo está completamente vazio
                              reject(new Error("Arquivo CSV está vazio."));
                              return;
                         }
@@ -494,7 +409,6 @@
                             return;
                         }
 
-                        // CORREÇÃO: Permite arquivos que tenham apenas cabeçalho (0 linhas de dados)
                         const rows = lines.slice(1).map(line => {
                             const values = line.split(delimiter);
                             return headers.reduce((obj, header, index) => {
@@ -516,12 +430,10 @@
             });
         }
         
-        // NOVO: Função auxiliar para VLAN
         const getSubnet = (ip) => {
             if (!ip || ip === '-') return null;
             return ip.split('.').slice(0, 3).join('.');
         }
-
 
         /**
          * Função principal para ler e processar os arquivos.
@@ -530,12 +442,9 @@
             const fileRadio = document.getElementById('csvRadio').files[0];
             const fileSwitch = document.getElementById('csvSwitch').files[0];
             const fileSeriais = document.getElementById('csvSeriais').files[0];
-            // REMOVIDO: const fileSetor
 
-            // NOVO: Lê o valor do raio selecionado
             const selectedRadius = parseInt(document.getElementById('sectorRadius').value, 10);
 
-            // ATUALIZADO: Volta para 3 arquivos (Seriais é opcional)
             if (!fileRadio || !fileSwitch) { 
                 showMessage("Por favor, selecione pelo menos os arquivos Rádio e Switch.", true);
                 return;
@@ -545,9 +454,8 @@
             nodes = {};
             links = [];
             serialMap.clear();
-            subnetVlanMap.clear(); // NOVO (VLAN)
+            subnetVlanMap.clear(); 
             
-            // Limpa visualizações anteriores
             clearVisuals();
             showMessage("Processando arquivos...", false);
             
@@ -559,322 +467,309 @@
                         serialData.rows.forEach(row => {
                             const ip = row['IP']?.trim();
                             const serial = row['Serial Number']?.trim();
-                            // NOVO: Lê o Part Number
-                            const partNumber = row['Part Number']?.trim(); 
+                            const partNumber = row['Part Number']?.trim() || '-'; 
                             
-                            // ATUALIZAÇÃO: Armazena um objeto no map
-                            if (ip && (serial || partNumber)) {
+                            if (ip && (serial || partNumber !== '-')) {
                                 serialMap.set(ip, { 
                                     serial: serial || '-', 
-                                    partNumber: partNumber || '-' 
+                                    partNumber: partNumber 
                                 });
                             }
                         });
                     } catch (e) {
-                         console.warn("Arquivo de seriais não pôde ser processado (talvez esteja vazio), continuando...");
+                         console.warn("Arquivo de seriais não pôde ser processado, continuando...");
                     }
                 }
-                
-                // console.log(`Arquivo de Seriais processado. ${serialMap.size} IPs mapeados.`);
 
-                // 2. Lê o arquivo de Switch (CEN -> Info Switch)
-                // ATUALIZAÇÃO: Processa o Switch primeiro, indexado por Node ID
+                // 2. Lê o arquivo de Switch (Gera o subnetVlanMap)
                 const switchData = await parseCSV(fileSwitch, ';');
+                if (switchData.rows.length === 0) {
+                    throw new Error("Arquivo de Switch não contém dados.");
+                }
+                processSwitchData(switchData.rows);
                 
-                switchData.rows.forEach(row => {
-                    const cen = row['CEN']?.trim();
-                    const nodeID = row['Node ID']?.trim();
-                    if (!nodeID) return; // Pula linha se não tiver Node ID
-                    
-                    const produto = row['DESCRIÇÃO']?.trim() || row['Product']?.trim() || '-';
-                    const ipRaw = row['IP/Mascara']?.trim() || row['IP address']?.trim() || '-';
-                    const ip = ipRaw.split('/')[0]; 
-                    const vlan = row['VLAN']?.trim() || '-';
-                    
-                    // Cria a entrada do nó (baseada no Node ID)
-                    if (!nodes[nodeID]) {
-                         nodes[nodeID] = createEmptyNode(nodeID);
-                    }
-                    
-                    // Adiciona dados do Switch
-                    nodes[nodeID].cen = cen; // CEN (localização)
-                    nodes[nodeID].switchProduct = produto;
-                    nodes[nodeID].switchIP = ip;
-                    nodes[nodeID].switchVLAN = vlan;
-                    // (Lat/Lon e Clusters virão do arquivo de Rádio)
-
-                    // NOVO (VLAN): Popula o mapa mestre de Sub-rede -> VLAN
-                    const subnet = getSubnet(ip);
-                    if (subnet && vlan !== '-') {
-                        subnetVlanMap.set(subnet, vlan);
-                    }
-                });
-                // console.log(`Arquivo de Switch processado. ${Object.keys(nodes).length} nós (switches) criados.`);
-
-                
-                // 3. Lê o arquivo de Rádio (Arquivo principal)
+                // 3. Lê o arquivo de Rádio (Usa o subnetVlanMap)
                 const radioData = await parseCSV(fileRadio, ';');
-                
                 if (radioData.rows.length === 0) {
                     throw new Error("Arquivo de Rádio não contém dados.");
                 }
+                processRadioData(radioData.rows); 
 
-                // Passa o tempSwitchMap para a função
-                processRadioData(radioData.rows);
-
-                // 5. Renderiza tudo
-                renderMap(selectedRadius); // Passa o raio selecionado
+                // 4. Renderiza tudo
+                renderMap(selectedRadius); 
                 renderTables();
 
                 document.getElementById('tablesContainer').classList.remove('hidden');
-                showMessage(`Topologia gerada com sucesso! ${Object.keys(nodes).length} nós e ${links.length} links encontrados.`, false);
+                // ====================================================================
+                // 4. MOSTRAR BOTÃO DE EXPORTAR
+                // ====================================================================
+                document.getElementById('exportButtonContainer').classList.remove('hidden');
+                
+                const nodesComRadio = Object.values(nodes).filter(n => n.lat !== null).length;
+                showMessage(`Topologia gerada com sucesso! ${nodesComRadio} nós com rádio e ${links.length} links encontrados.`, false);
 
             } catch (error) {
                 console.error("Erro no processamento dos arquivos:", error);
                 showMessage(`Erro no processamento dos arquivos: ${error.message}`, true);
             }
         }
-        
-        /**
-         * NOVO: Função helper para criar um nó (baseado em Node ID)
-         */
-        function createEmptyNode(nodeID) {
-             return {
-                nodeID: nodeID,
-                cen: 'N/A', // Será preenchido pelo Switch ou Rádio
-                lat: null, // Será preenchido pelo Rádio
-                lon: null, // Será preenchido pelo Rádio
-                
-                // ATUALIZAÇÃO: Rádios agora são um array de objetos
-                radios: [], // [{ product, ip, vlan, freq, tddPol, sectorNum, azimuth }]
-                
-                switchProduct: '-',
-                switchIP: '-',
-                switchVLAN: '-',
-                
-                clusters: new Set(), // Armazena clusters do nó
-                
-                // Armazena (Setor -> Azimute REAL)
-                // (Usado para desenhar os setores MH-N)
-                sectors: new Map(), 
-                calculatedBaseAzimuth: undefined // Armazena o Azimute Base CALCULADO
-            };
-        }
 
+        /**
+         * Processa os dados do arquivo de Switch.
+         */
+        function processSwitchData(rows) {
+            for (const row of rows) {
+                const nodeID = row['Node ID']?.trim();
+                
+                let product = row['DESCRIÇÃO']?.trim() || '-';
+                
+                // "Traduz" o nome do produto
+                switch (product) {
+                    case "Sw 4 portas":
+                        product = "Planet IGS-4215-4UP4T2S";
+                        break;
+                    case "Sw 8 portas":
+                        product = "Planet IGS-4215-8UP2T2S";
+                        break;
+                    case "Planet switch SGS-6310-8P4X - 10G":
+                        product = "Planet SGS-6310-8P4X";
+                        break;
+                }
+
+                const ipMask = row['IP/Mascara']?.trim() || '-';
+                const vlan = row['VLAN']?.trim() || '-';
+                
+                const ip = ipMask.split('/')[0] || '-';
+
+                if (!nodeID) continue; 
+
+                // 1. Atualiza/Cria o Nó no inventário
+                if (!nodes[nodeID]) {
+                    nodes[nodeID] = {
+                        nodeID: nodeID,
+                        cen: row['CEN']?.trim() || '-', 
+                        lat: null, 
+                        lon: null, 
+                        radioProducts: [], 
+                        switchProduct: product, 
+                        switchIP: ip,
+                        switchVLAN: vlan,
+                        freqRadios: new Set(),
+                        tddPols: new Set(),
+                        clusters: new Set(), 
+                        polarizations: new Set(),
+                        sectors: new Map(), 
+                    };
+                } else {
+                    nodes[nodeID].switchProduct = product; 
+                    nodes[nodeID].switchIP = ip;
+                    nodes[nodeID].switchVLAN = vlan;
+                }
+
+                // 2. Alimenta o Mapa Mestre de VLANs
+                const subnet = getSubnet(ip);
+                if (subnet && vlan !== '-' && !subnetVlanMap.has(subnet)) {
+                    subnetVlanMap.set(subnet, vlan);
+                }
+            }
+        }
+        
         /**
          * Processa os dados do arquivo de Rádio.
          */
-        function processRadioData(rows) { // Não precisa mais do switchMap
+        function processRadioData(rows) { 
             
-            // parseCoord foi movido para o escopo global
-
-            // NOVO: Função auxiliar para a regra do Setor (+1)
             const parseSectorRule = (val) => {
                 const trimmedVal = val?.trim();
-                // NOVO: Converte para número
                 const num = parseInt(trimmedVal, 10);
-
-                // Verifica se é um número válido (incluindo 0)
                 if (!isNaN(num)) {
                     return (num + 1).toString(); // Soma +1
                 }
-                
-                // Se não for um número (ex: "-", "P2P", vazio), retorna o original
                 return trimmedVal || '-';
             };
 
             for (const row of rows) {
-                const cenA = row['CEN A']?.trim();
-                let cenB = row['CEN B']?.trim(); // MUDANÇA: const -> let
+                let cenA = row['CEN A']?.trim();
+                let cenB = row['CEN B']?.trim();
                 const nodeIDA = row['Node ID A']?.trim();
                 const nodeIDB = row['Node ID B']?.trim();
 
-                // MUDANÇA: Lê o produto ANTES da verificação de nulos
-                const productRaw = row['Product']?.trim() || '-';
+                if (!nodeIDA || !nodeIDB) continue; 
 
-                // MUDANÇA: Regra de negócio para MH-T280
-                if (productRaw.includes("MH-T280")) {
-                    cenB = cenA; // Força o CEN B a ser igual ao CEN A
-                }
-
-                // Pula se não tiver Node IDs ou CENs (agora cenB está preenchido, se necessário)
-                if (!cenA || !cenB || !nodeIDA || !nodeIDB) continue;
-
-                // --- ATUALIZAÇÃO: Nova lógica de Coordenadas (V5 - Revertida) ---
                 let latA = parseCoord(row['Node Lat A']);
                 let lonA = parseCoord(row['Node Lon A']);
                 let latB = parseCoord(row['Node Lat B']);
                 let lonB = parseCoord(row['Node Lon B']);
 
-                // Se qualquer coordenada falhar, pula este link
                 if (isNaN(latA) || isNaN(lonA) || isNaN(latB) || isNaN(lonB)) {
-                    // console.warn(`Coordenadas inválidas para o link ${cenA}-${cenB}. Pulando.`);
-                    continue;
+                    continue; 
                 }
                 
-                // NOVO: Lê o CLUSTER
                 const cluster = row['CLUSTER']?.trim() || 'Sem Cluster';
 
-                // NOVO: Se o cluster é novo, cria uma camada para ele
                 if (cluster !== 'Sem Cluster' && !clusterLayers[cluster]) {
-                    const newLayer = L.layerGroup().addTo(map); // Adiciona ao mapa
+                    const newLayer = L.layerGroup().addTo(map);
                     clusterLayers[cluster] = newLayer;
-                    layerControl.addOverlay(newLayer, cluster); // Adiciona ao controle de camadas
+                    layerControl.addOverlay(newLayer, cluster);
                 }
 
-                // --- Outros Dados do Link ---
-                // MUDANÇA: productRaw já foi lido acima
-                // const productRaw = row['Product']?.trim() || '-'; 
+                const productRaw = row['Product']?.trim() || '-';
                 let produtoA, produtoB;
-                let produtoBaseA, produtoBaseB; // Para o Inventário
+                let produtoBaseA, produtoBaseB; 
 
-                // CORREÇÃO: Usa o separador exato " - " (com espaços)
                 if (productRaw.includes(" - ")) {
                     const parts = productRaw.split(" - ");
                     produtoA = parts[0]?.trim() || '-';
                     produtoB = parts[1]?.trim() || '-';
                 } else {
-                    // ATUALIZAÇÃO: Se não houver " - ", repete o nome e adiciona (R) ao Produto B
                     produtoA = productRaw;
-                    produtoB = `${productRaw} (R)`;
+                    produtoB = productRaw !== '-' ? `${productRaw} (R)` : '-';
                 }
 
-                // O nome do produto para o inventário (produtoBase) deve ser o mesmo
                 produtoBaseA = produtoA;
-                produtoBaseB = produtoB; // Agora produtoB carrega o nome com (R)
+                produtoBaseB = produtoB; 
                 
+                if (productRaw.includes("MH-T280") || productRaw.includes("EH-8010FX")) {
+                    cenB = cenA; 
+                }
+
                 const ipA = row['IP address A']?.trim() || '-';
                 const ipB = row['IP address B']?.trim() || '-';
                 const freqA = row['TX freq (MHz) A']?.trim() || '-';
                 const freqB = row['TX freq (MHz) B']?.trim() || '-';
                 const tddPol = row['TDD-pol']?.trim() || '-';
                 
-                // --- NOVAS COLUNAS (PARA A TABELA DE LINKS) ---
                 const azimuthA = row['Antenna Azimuth (deg) A']?.trim() || '-';
                 const azimuthB = row['Antenna Azimuth (deg) B']?.trim() || '-';
-                // APLICA A REGRA (+1)
                 const sectInDevice = parseSectorRule(row['Sect-In-Device index']);
                 
-                // NOVO: Lê TX Power e RSSI
                 const txPower = row['TX Power A/B (dBm)']?.trim() || '-';
                 const rssi = row['RSSI (dBm) A/B']?.trim() || '-';
                 
-                // --- NOVO: Cálculo do Azimute do Setor 1 (Baseado na regra de rede) ---
-                let setor1CalculatedAz = '-';
-                const sectorNumN = parseInt(sectInDevice, 10); // N (já com +1)
-                const azimuthNumAz = parseFloat(azimuthA.replace(',', '.')); // Az
+                const polarization = row['Polarization']?.trim() || '-';
+                const txOpMode = row['TX op-mode A/B']?.trim() || '-';
                 
-                // Verifica se é um rádio MH-N e se os dados são numéricos
+                
+                let setor1CalculatedAz = '-';
+                const sectorNumN = parseInt(sectInDevice, 10);
+                const azimuthNumAz = parseFloat(azimuthA.replace(',', '.'));
+                
                 if (produtoBaseA.startsWith("MH-N") && !isNaN(sectorNumN) && !isNaN(azimuthNumAz)) {
-                    // Fórmula: Az(1) = (Az(N) - (N - 1) * 90)
                     const calculatedAz = azimuthNumAz - ((sectorNumN - 1) * 90);
-                    
-                    // Normaliza o ângulo (para lidar com valores negativos, ex: 70 - 90 = -20)
                     const normalizedAz = (calculatedAz % 360 + 360) % 360;
-                    
                     setor1CalculatedAz = `${normalizedAz.toFixed(1)}°`;
                 }
-                // --- FIM DO CÁLCULO ---
-                
-                // --- Adiciona/Atualiza Nós (Baseado em Node ID) ---
 
-                // Nó A
-                if (!nodes[nodeIDA]) {
-                    // Nó existe apenas no arquivo de Rádio (Rádio puro)
-                    nodes[nodeIDA] = createEmptyNode(nodeIDA);
-                }
-                // Atualiza/Define dados do Nó A
-                nodes[nodeIDA].cen = cenA; // CEN (localização)
-                nodes[nodeIDA].lat = latA;
-                nodes[nodeIDA].lon = lonA;
-                nodes[nodeIDA].clusters.add(cluster); // Associa cluster ao nó
-
-                // Nó B
-                if (!nodes[nodeIDB]) {
-                    // Nó existe apenas no arquivo de Rádio (Rádio puro)
-                    nodes[nodeIDB] = createEmptyNode(nodeIDB);
-                }
-                // Atualiza/Define dados do Nó B
-                nodes[nodeIDB].cen = cenB; // CEN (localização) (agora corrigido para MH-T280)
-                nodes[nodeIDB].lat = latB;
-                nodes[nodeIDB].lon = lonB;
-                nodes[nodeIDB].clusters.add(cluster); // Associa cluster ao nó
-
-
-                // --- Lógica de VLAN (NOVO) ---
-                // O Rádio A herda a VLAN da sub-rede (do mapa mestre)
                 const radioSubnetA = getSubnet(ipA);
-                const vlanA = subnetVlanMap.get(radioSubnetA) || '-'; // Pega VLAN ou '-'
-
-                // O Rádio B herda a VLAN da sub-rede (do mapa mestre)
+                const vlanA = subnetVlanMap.get(radioSubnetA) || '-'; 
                 const radioSubnetB = getSubnet(ipB);
-                const vlanB = subnetVlanMap.get(radioSubnetB) || '-'; // Pega VLAN ou '-'
-
-                // --- Fim da Lógica de VLAN ---
-
-                // --- Dados específicos do Rádio (Lado A) ---
-                const azimuthNumA = parseFloat(azimuthA.replace(',', '.'));
-                const sectorNumA = parseInt(sectInDevice, 10); // sectInDevice já tem +1
+                const vlanB = subnetVlanMap.get(radioSubnetB) || '-'; 
                 
-                // Adiciona o Rádio A ao array de rádios do Nó A
-                nodes[nodeIDA].radios.push({
+                if (!nodes[nodeIDA]) {
+                    nodes[nodeIDA] = {
+                        nodeID: nodeIDA,
+                        cen: cenA,
+                        lat: latA,
+                        lon: lonA,
+                        radioProducts: [], 
+                        switchProduct: '-', 
+                        switchIP: '-',
+                        switchVLAN: '-',
+                        freqRadios: new Set(),
+                        tddPols: new Set(),
+                        clusters: new Set(), 
+                        polarizations: new Set(),
+                        sectors: new Map(), 
+                        calculatedBaseAzimuth: undefined 
+                    };
+                } else {
+                    nodes[nodeIDA].lat = latA;
+                    nodes[nodeIDA].lon = lonA;
+                    nodes[nodeIDA].cen = cenA;
+                }
+                
+                if (!nodes[nodeIDB]) {
+                    nodes[nodeIDB] = {
+                        nodeID: nodeIDB,
+                        cen: cenB,
+                        lat: latB,
+                        lon: lonB,
+                        radioProducts: [], 
+                        switchProduct: '-',
+                        switchIP: '-',
+                        switchVLAN: '-',
+                        freqRadios: new Set(),
+                        tddPols: new Set(),
+                        clusters: new Set(), 
+                        polarizations: new Set(),
+                        sectors: new Map() 
+                    };
+                } else {
+                    nodes[nodeIDB].lat = latB;
+                    nodes[nodeIDB].lon = lonB;
+                    nodes[nodeIDB].cen = cenB;
+                }
+
+                nodes[nodeIDA].radioProducts.push({
                     product: produtoBaseA,
                     ip: ipA,
-                    vlan: vlanA,
-                    freq: freqA,
-                    tddPol: tddPol,
-                    sectorNum: !isNaN(sectorNumA) ? sectorNumA : null,
-                    azimuth: !isNaN(azimuthNumA) ? azimuthNumA : null
+                    vlan: vlanA 
                 });
 
-                // NOVO: Associa Setor/Azimute (APENAS LADO A)
+                nodes[nodeIDA].freqRadios.add(freqA);
+                nodes[nodeIDA].tddPols.add(tddPol);
+                nodes[nodeIDA].clusters.add(cluster);
+                nodes[nodeIDA].polarizations.add(polarization);
+
+                const azimuthNumA = parseFloat(azimuthA.replace(',', '.'));
+                const sectorNumA = parseInt(sectInDevice, 10);
                 if (produtoBaseA.startsWith("MH-N") && !isNaN(sectorNumA) && !isNaN(azimuthNumA)) {
-                    // Armazena o azimute real para este setor
                     nodes[nodeIDA].sectors.set(sectorNumA, azimuthNumA); 
                     
-                    // NOVO: Salva o Azimute Base CALCULADO
-                    // Tenta salvar o Azimute Base calculado (apenas o primeiro encontrado para este nó)
                     if (nodes[nodeIDA].calculatedBaseAzimuth === undefined && setor1CalculatedAz !== '-') {
                         nodes[nodeIDA].calculatedBaseAzimuth = parseFloat(setor1CalculatedAz.replace('°', ''));
                     }
                 }
-                
-                // Adiciona o Rádio B ao array de rádios do Nó B
-                nodes[nodeIDB].radios.push({
+
+                nodes[nodeIDB].radioProducts.push({
                     product: produtoBaseB,
                     ip: ipB,
-                    vlan: vlanB,
-                    freq: freqB,
-                    tddPol: tddPol,
-                    sectorNum: null, // Lado B não tem setor MH-N
-                    azimuth: null // Lado B não tem setor MH-N
+                    vlan: vlanB 
                 });
-
+                
+                nodes[nodeIDB].freqRadios.add(freqB);
+                nodes[nodeIDB].tddPols.add(tddPol);
+                nodes[nodeIDB].clusters.add(cluster);
+                nodes[nodeIDB].polarizations.add(polarization);
                 
                 // --- Adiciona Link ---
                 links.push({
-                    // ATUALIZAÇÃO: Links agora usam Node ID E CEN
-                    idA: nodeIDA, // Node ID A
-                    idB: nodeIDB, // Node ID B
-                    cenA: cenA, // CEN A (para tabela)
-                    cenB: cenB, // CEN B (para tabela) (agora corrigido para MH-T280)
-                    cluster: cluster, // NOVO: Salva o cluster do link
+                    idA: nodeIDA,
+                    idB: nodeIDB,
+                    cenA: cenA, 
+                    cenB: cenB, 
+                    cluster: cluster, 
                     latA: latA, lonA: lonA,
                     latB: latB, lonB: lonB,
                     produtoA: produtoA, 
                     produtoB: produtoB, 
                     tddPol: tddPol,
-                    // NOVAS PROPRIEDADES (PARA TABELA)
                     azimuthA: azimuthA,
                     azimuthB: azimuthB,
                     sectInDevice: sectInDevice,
-                    txPower: txPower, // NOVO
-                    rssi: rssi,       // NOVO
-                    setor1CalculatedAzimuth: setor1CalculatedAz, // NOVO (CALCULADO)
-                    // FIM NOVAS PROPRIEDADES
+                    txPower: txPower,
+                    rssi: rssi,      
+                    setor1CalculatedAzimuth: setor1CalculatedAz,
                     freqA: freqA,
                     freqB: freqB,
-                    // REMOVIDO: baseAzimuthA, baseAzimuthB
+                    polarization: polarization, 
+                    txOpMode: txOpMode,
+                    
+                    // ====================================================================
+                    // 1. ADICIONAR IPs AO LINK
+                    // ====================================================================
+                    ipA: ipA,
+                    ipB: ipB
                 });
             }
         }
@@ -882,13 +777,11 @@
         /**
          * Renderiza os nós e links no mapa.
          */
-        function renderMap(selectedRadius) { // Aceita o raio como argumento
+        function renderMap(selectedRadius) { 
             if (!map) {
-                // console.error("Mapa não inicializado.");
-                return;
+                return; 
             }
 
-            // Limpa camadas
             mapLayers.markers.clearLayers();
             mapLayers.lines.clearLayers();
             mapLayers.sectors1.clearLayers();
@@ -896,67 +789,68 @@
             mapLayers.sectors3.clearLayers();
             mapLayers.sectors4.clearLayers();
             
-            // NOVO: Limpa camadas de cluster dinâmicas (recriadas no processRadioData)
-            // (A limpeza real e remoção do controle acontece no clearVisuals)
-            
             let bounds = [];
 
-            // Renderiza Marcadores (Nós) - Iterando por Node ID
+            // Renderiza Marcadores (Nós)
             for (const nodeID in nodes) {
                 const node = nodes[nodeID];
                 
-                // Só desenha o marcador se o nó tiver coordenadas (veio do arquivo de Rádio)
                 if (node.lat && node.lon) {
                     
-                    // --- Coleta de IPs e Seriais (para PopUp) ---
-                    const allIPs = new Set();
-                    if (node.switchIP !== '-') allIPs.add(node.switchIP);
-                    node.radios.forEach(r => { if(r.ip !== '-') allIPs.add(r.ip) });
+                    const radioIPs = node.radioProducts.map(r => r.ip).filter(ip => ip !== '-');
+                    const allIPs = radioIPs.concat(node.switchIP !== '-' ? [node.switchIP] : []);
+                    const serialObjects = allIPs.map(ip => serialMap.get(ip)).filter(Boolean); 
                     
-                    const serials = [];
-                    allIPs.forEach(ip => {
-                        const info = serialMap.get(ip);
-                        if (info) {
-                            serials.push(`PN: ${info.partNumber}, SN: ${info.serial}`);
-                        }
-                    });
-                    
-                    // --- Coleta de Produtos (para PopUp) ---
-                    const radioProducts = node.radios.map(r => r.product).filter(p => p !== '-');
-                    const radioIPs = node.radios.map(r => r.ip).filter(ip => ip !== '-');
-                    const radioVLANs = node.radios.map(r => r.vlan).filter(v => v !== '-');
-                    const radioFreqs = node.radios.map(r => r.freq).filter(f => f !== '-');
-                    const radioTDDs = node.radios.map(r => r.tddPol).filter(t => t !== '-');
+                    const radioProducts = node.radioProducts.map(r => r.product).filter(p => p !== '-');
+                    const radioVLANs = node.radioProducts.map(r => r.vlan).filter(v => v !== '-');
+                    const polarizations = Array.from(node.polarizations).filter(p => p !== '-');
 
-                    // --- Conteúdo do PopUp ---
-                    // ATUALIZAÇÃO: Título é Node ID, CEN é atributo
-                    let popupContent = `<div class="popup-title">${node.nodeID}</div>`;
-                    popupContent += `<strong>CEN (Local):</strong> ${node.cen}<br>`; 
+                    let popupContent = `<div class="popup-title">Node ID: ${node.nodeID}</div>`;
+                    popupContent += `<strong>CEN:</strong> ${node.cen}<br>`; 
                     popupContent += `<strong>Cluster(s):</strong> ${Array.from(node.clusters).join(', ')}<br>`; 
                     
                     popupContent += `<div class="popup-section">Info Rádio</div>`;
-                    popupContent += `<strong>Produto(s):</strong> ${[...new Set(radioProducts)].join(', ')}<br>`;
-                    popupContent += `<strong>IP(s):</strong> ${[...new Set(radioIPs)].join(', ')}<br>`;
-                    popupContent += `<strong>VLAN(s) Rádio:</strong> ${[...new Set(radioVLANs)].join('<br>') || '-'}<br>`;
-                    popupContent += `<strong>Frequência(s):</strong> ${[...new Set(radioFreqs)].join(', ')}<br>`;
-                    popupContent += `<strong>TDD-POL:</strong> ${[...new Set(radioTDDs)].join(', ')}<br>`;
-                    
-                    // ATUALIZAÇÃO: Exibe texto estático para Azimute
-                    popupContent += `<strong>Sectores (Azimute):</strong><br>Verificar na Lista de Links`;
+                    popupContent += `<strong>Produto(s):</strong> ${radioProducts.length > 0 ? radioProducts.join('<br>') : '-'}<br>`;
+                    popupContent += `<strong>IP(s):</strong> ${radioIPs.length > 0 ? radioIPs.join('<br>') : '-'}<br>`;
+                    popupContent += `<strong>VLAN(s) Rádio:</strong> ${radioVLANs.length > 0 ? [...new Set(radioVLANs)].join('<br>') : '-'}<br>`; 
+                    popupContent += `<strong>Frequência(s):</strong> ${Array.from(node.freqRadios).filter(f => f !== '-').join(', ')}<br>`;
+                    popupContent += `<strong>Pol.:</strong> ${polarizations.length > 0 ? [...new Set(polarizations)].join(', ') : '-'}<br>`;
+                    popupContent += `<strong>TDD-POL:</strong> ${Array.from(node.tddPols).filter(p => p !== '-').join(', ')}<br>`;
 
                     popupContent += `<div class="popup-section">Equip. Adicional (Switch)</div>`;
-                    popupContent += `<strong>Produto:</strong> ${node.switchProduct}<br>`;
-                    popupContent += `<strong>IP:</strong> ${node.switchIP}<br>`;
-                    popupContent += `<strong>VLAN:</strong> ${node.switchVLAN}<br>`;
+                    popupContent += `<strong>Produto:</strong> ${node.switchProduct}<br>`; 
+                    popupContent += `<strong>IP:</strong> ${node.switchIP}<br>`; 
+                    popupContent += `<strong>VLAN:</strong> ${node.switchVLAN}<br>`; 
 
-                    popupContent += `<div class="popup-section">Seriais (PN/SN)</div>`;
-                    popupContent += `${serials.length > 0 ? serials.join('<br>') : '-'}`;
+                    popupContent += `<div class="popup-section">Seriais</div>`;
+                
+                    if (serialObjects.length > 0) {
+                        let serialHtml = '';
+                        const seen = new Set(); 
+
+                        serialObjects.forEach(s => {
+                            const key = `${s.partNumber}|${s.serial}`;
+                            if (s.partNumber !== '-' || s.serial !== '-') {
+                                if (!seen.has(key)) {
+                                    serialHtml += `<strong>PN:</strong> ${s.partNumber}<br><strong>SN:</strong> ${s.serial}<br><br>`;
+                                    seen.add(key);
+                                }
+                            }
+                        });
+
+                        if (serialHtml.length > 0) {
+                            popupContent += serialHtml.slice(0, -8); 
+                        } else {
+                            popupContent += `-`;
+                        }
+                    } else {
+                        popupContent += `-`;
+                    }
 
                     const marker = L.marker([node.lat, node.lon])
-                        .addTo(mapLayers.markers) // Adiciona à camada principal "Nós"
+                        .addTo(mapLayers.markers) 
                         .bindPopup(popupContent);
                     
-                    // NOVO: Adiciona marcador às camadas de cluster
                     node.clusters.forEach(clusterName => {
                         if (clusterLayers[clusterName]) {
                             marker.addTo(clusterLayers[clusterName]);
@@ -965,26 +859,24 @@
                     
                     bounds.push([node.lat, node.lon]);
                     
-                    // ATUALIZADO: LÓGICA DE SETOR (MH-N) (vindo do CÁLCULO)
                     if (node.calculatedBaseAzimuth !== undefined) { 
-                        const baseAzimuth = node.calculatedBaseAzimuth; // é um float (CALCULADO)
+                        const baseAzimuth = node.calculatedBaseAzimuth; 
                         const center = [node.lat, node.lon];
-                        const radius = selectedRadius || 70; // Usa o raio selecionado
-                        const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00']; // R, G, B, Y
+                        const radius = selectedRadius || 50; 
+                        const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00']; 
                         const opacity = 0.2;
                         const sectorLayerGroups = [mapLayers.sectors1, mapLayers.sectors2, mapLayers.sectors3, mapLayers.sectors4];
-                        const halfWidth = 45.1; // Sobreposição
+                        const halfWidth = 45.1; 
 
-                        // Pop-up para o setor (associado ao nó)
                         const sectorPopupContent = `
-                            <div class="popup-title">Info Setor (Nó: ${node.nodeID})</div>
+                            <div class="popup-title">Info Setor (Node: ${node.nodeID})</div>
                             <strong>CEN:</strong> ${node.cen}<br>
+                            <strong>Node ID:</strong> ${node.nodeID}<br>
                             <strong>Azimute Base (Setor 1):</strong> ${node.calculatedBaseAzimuth.toFixed(1)}° (Calculado)
                         `;
 
                         for (let i = 0; i < 4; i++) {
                             const sectorNum = i + 1;
-                            // CALCULA O AZIMUTE (SENTIDO HORÁRIO)
                             const sectorCenterAzimuth = (baseAzimuth + (i * 90) + 360) % 360;
 
                             const sectorIndex = i;
@@ -992,14 +884,13 @@
                             const label = sectorNum.toString();
                             const layerGroup = sectorLayerGroups[sectorIndex];
                             
-                            // L.semiCircle usa 0=Norte, sentido HORÁRIO.
                             const leafletStart = (sectorCenterAzimuth - halfWidth + 360) % 360;
                             const leafletStop = (sectorCenterAzimuth + halfWidth + 360) % 360;
                             
                             const sectorLayer = L.semiCircle(center, {
                                 radius: radius,
-                                startAngle: leafletStart, // Normal
-                                stopAngle: leafletStop,  // Normal
+                                startAngle: leafletStart, 
+                                stopAngle: leafletStop, 
                                 fill: true,
                                 fillColor: color,
                                 fillOpacity: opacity,
@@ -1014,7 +905,6 @@
                             })
                             .addTo(layerGroup);
                             
-                            // Adiciona o popup SOMENTE ao Setor 1
                             if (sectorNum === 1) {
                                 sectorLayer.bindPopup(sectorPopupContent);
                             }
@@ -1025,33 +915,29 @@
 
             // Renderiza Linhas (Links)
             links.forEach(link => {
-                let color = '#007bff'; // Azul padrão
+                let color = '#007bff'; 
                 const tdd = link.tddPol.toLowerCase();
                 
                 if (tdd.includes('odd')) {
-                    color = '#d9534f'; // Vermelho
+                    color = '#d9534f'; 
                 } else if (tdd.includes('even')) {
-                    color = '#5cb85c'; // Verde
+                    color = '#5cb85c'; 
                 } else if (tdd.includes('p2p')) {
-                    color = '#f0ad4e'; // Amarelo
+                    color = '#f0ad4e'; 
                 }
 
                 const polyline = L.polyline([[link.latA, link.lonA], [link.latB, link.lonB]], {
                     color: color,
                     weight: 2,
                     opacity: 0.7
-                }).addTo(mapLayers.lines); // Adiciona à camada principal "Links"
+                }).addTo(mapLayers.lines); 
                 
-                // NOVO: Adiciona linha à camada de cluster
                 const clusterName = link.cluster;
                 if (clusterLayers[clusterName]) {
                     polyline.addTo(clusterLayers[clusterName]);
                 }
             });
 
-            // REMOVIDO: Loop de Setores Independentes
-            
-            // Centraliza o mapa
             if (bounds.length > 0) {
                 map.fitBounds(bounds, { padding: [20, 20] }); 
             }
@@ -1066,110 +952,86 @@
             
             linkListBody.innerHTML = '';
             nodeInventoryBody.innerHTML = '';
-            
+
             // Preenche Tabela de Links
             links.forEach(link => {
                 const tr = document.createElement('tr');
                 tr.className = 'border-b last:border-b-0 hover:bg-gray-50 transition-colors duration-150';
                 
                 tr.innerHTML = `
-                    <!-- NOVO: Coluna Cluster -->
-                    <td class="py-3 px-4">${link.cluster}</td> 
-                    <!-- ATUALIZAÇÃO: Mostra CEN A e CEN B -->
+                    <td class="py-3 px-4">${link.cluster}</td>
                     <td class="py-3 px-4">${link.cenA}</td>
                     <td class="py-3 px-4">${link.cenB}</td>
                     <td class="py-3 px-4">${link.produtoA}</td>
                     <td class="py-3 px-4">${link.produtoB}</td>
+                    <td class="py-3 px-4">${link.polarization}</td>
                     <td class="py-3 px-4">${link.tddPol}</td>
-                    <td class="py-3 px-4">${link.azimuthA}</td>
-                    <td class="py-3 px-4">${link.azimuthB}</td>
-                    <td class="py-3 px-4">${link.sectInDevice}</td>
-                    <!-- NOVAS CÉLULAS ADICIONADAS -->
                     <td class="py-3 px-4">${link.txPower}</td>
-                    <td class="py-3 px-4">${link.rssi}</td>
-                    <!-- FIM NOVAS CÉLULAS -->
                     <td class="py-3 px-4">${link.freqA}</td>
                     <td class="py-3 px-4">${link.freqB}</td>
-                    <!-- NOVO: Célula Setor 1 (Azimute) -->
+                    <td class="py-3 px-4">${link.txOpMode}</td>
+                    <td class="py-3 px-4">${link.rssi}</td>
                     <td class="py-3 px-4">${link.setor1CalculatedAzimuth}</td>
+                    <td class="py-3 px-4">${link.sectInDevice}</td>
+                    <td class="py-3 px-4">${link.azimuthA}</td>
+                    <td class="py-3 px-4">${link.azimuthB}</td>
                 `;
+
                 linkListBody.appendChild(tr);
             });
 
-            // Preenche Tabela de Inventário (Baseado em Node ID)
-            
-            // 1. Converte o objeto 'nodes' para um array
+            // Preenche Tabela de Inventário
             const nodesArray = Object.values(nodes);
             
-            // 2. Classifica o array pelo Cluster
             nodesArray.sort((a, b) => {
-                const clusterA = Array.from(a.clusters).join(', ') || 'ZZZ'; // Joga 'Sem Cluster' para o final
-                const clusterB = Array.from(b.clusters).join(', ') || 'ZZZ';
+                const clusterA = Array.from(a.clusters).join(', ');
+                const clusterB = Array.from(b.clusters).join(', ');
                 return clusterA.localeCompare(clusterB);
             });
-            
-            // 3. Itera sobre o array classificado e cria as linhas
-            for (const node of nodesArray) {
-                
-                const nodeID = node.nodeID;
-                const cen = node.cen || 'N/A';
-                const cluster = Array.from(node.clusters).join('<br>') || '-';
-                
-                const hasSwitch = node.switchProduct !== '-';
-                const hasRadios = node.radios.length > 0;
-                
-                // ATUALIZAÇÃO: Lógica para separar Rádios e Switches
-                
-                // Linha 1: Se for um Switch
-                if (hasSwitch) {
-                    // ATUALIZAÇÃO: Busca o objeto de serial
-                    const switchSerialInfo = serialMap.get(node.switchIP) || { serial: '-', partNumber: '-' };
-                    
-                    const trSwitch = document.createElement('tr');
-                    trSwitch.className = 'border-b last:border-b-0 hover:bg-gray-50 transition-colors duration-150';
-                    trSwitch.innerHTML = `
-                        <td class="py-3 px-4 align-top">${cluster}</td>
-                        <td class="py-3 px-4 align-top font-semibold">${cen}</td>
-                        <td class="py-3 px-4 align-top">${nodeID}</td>
-                        <td class="py-3 px-4 align-top">${node.switchProduct}</td>
-                        <td class="py-3 px-4 align-top">${node.switchIP}</td>
-                        <td class="py-3 px-4 align-top">${node.switchVLAN}</td>
-                        <!-- NOVO: Célula Part Number -->
-                        <td class="py-3 px-4 align-top">${switchSerialInfo.partNumber}</td>
-                        <td class="py-3 px-4 align-top">${switchSerialInfo.serial}</td>
-                    `;
-                    nodeInventoryBody.appendChild(trSwitch);
-                }
-                
-                // Linhas 2...N: Se tiver Rádios (Um para cada rádio)
-                if (hasRadios) {
-                    
-                    node.radios.forEach(radio => {
-                        const radioIP = radio.ip || '-';
-                        // ATUALIZAÇÃO: Busca o objeto de serial
-                        const radioSerialInfo = serialMap.get(radioIP) || { serial: '-', partNumber: '-' };
-                        const radioProduct = radio.product || '-';
-                        const radioVLAN = radio.vlan || '-';
 
-                        const trRadio = document.createElement('tr');
-                        trRadio.className = 'border-b last:border-b-0 hover:bg-gray-50 transition-colors duration-150';
-                        trRadio.innerHTML = `
-                            <td class="py-3 px-4 align-top">${cluster}</td>
-                            <td class="py-3 px-4 align-top font-semibold">${cen}</td>
-                            <td class="py-3 px-4 align-top">${nodeID}</td>
-                            <td class="py-3 px-4 align-top">${radioProduct}</td>
-                            <td class="py-3 px-4 align-top">${radioIP}</td>
-                            <td class="py-3 px-4 align-top">${radioVLAN}</td>
-                            <!-- NOVO: Célula Part Number -->
-                            <td class="py-3 px-4 align-top">${radioSerialInfo.partNumber}</td>
-                            <td class="py-3 px-4 align-top">${radioSerialInfo.serial}</td>
-                        `;
-                        nodeInventoryBody.appendChild(trRadio);
-                    });
-                }
+            for (const node of nodesArray) {
+                const clusters = Array.from(node.clusters);
+                const clustersStr = clusters.length > 0 ? clusters.join('<br>') : '-';
                 
-                // Se o nó não tiver nem switch nem rádio (veio só do Seriais, por ex?)
-                // Não será desenhado (pois não tem produto)
+                if (node.switchProduct !== '-') {
+                    const ip = node.switchIP;
+                    const vlan = node.switchVLAN;
+                    const serialInfo = serialMap.get(ip) || { serial: '-', partNumber: '-' };
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b last:border-b-0 hover:bg-gray-50 transition-colors duration-150';
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 align-top">${clustersStr}</td>
+                        <td class="py-3 px-4 align-top font-semibold">${node.cen}</td>
+                        <td class="py-3 px-4 align-top">${node.nodeID}</td>
+                        <td class="py-3 px-4 align-top">${node.switchProduct}</td>
+                        <td class="py-3 px-4 align-top">${ip}</td>
+                        <td class="py-3 px-4 align-top">${vlan}</td>
+                        <td class="py-3 px-4 align-top">${serialInfo.partNumber}</td>
+                        <td class="py-3 px-4 align-top">${serialInfo.serial}</td>
+                    `;
+                    nodeInventoryBody.appendChild(tr);
+                }
+
+                node.radioProducts.forEach(radio => {
+                    const ip = radio.ip;
+                    const vlan = radio.vlan;
+                    const serialInfo = serialMap.get(ip) || { serial: '-', partNumber: '-' };
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b last:border-b-0 hover:bg-gray-50 transition-colors duration-150';
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 align-top">${clustersStr}</td>
+                        <td class="py-3 px-4 align-top font-semibold">${node.cen}</td>
+                        <td class="py-3 px-4 align-top">${node.nodeID}</td>
+                        <td class="py-3 px-4 align-top">${radio.product}</td>
+                        <td class="py-3 px-4 align-top">${ip}</td>
+                        <td class="py-3 px-4 align-top">${vlan}</td>
+                        <td class="py-3 px-4 align-top">${serialInfo.partNumber}</td>
+                        <td class="py-3 px-4 align-top">${serialInfo.serial}</td>
+                    `;
+                    nodeInventoryBody.appendChild(tr);
+                });
             }
         }
 
@@ -1184,20 +1046,22 @@
             if (mapLayers.sectors3) mapLayers.sectors3.clearLayers();
             if (mapLayers.sectors4) mapLayers.sectors4.clearLayers();
             
-            // NOVO: Limpa e remove camadas de cluster dinâmicas
             if (layerControl) {
                 for (const clusterName in clusterLayers) {
-                    layerControl.removeLayer(clusterLayers[clusterName]); // Remove do controle
-                    clusterLayers[clusterName].clearLayers(); // Limpa a camada
+                    layerControl.removeLayer(clusterLayers[clusterName]); 
+                    clusterLayers[clusterName].clearLayers(); 
                 }
             }
-            clusterLayers = {}; // Reseta o objeto
-
+            clusterLayers = {}; 
 
             document.getElementById('linkListBody').innerHTML = '';
             document.getElementById('nodeInventoryBody').innerHTML = '';
             
             document.getElementById('tablesContainer').classList.add('hidden');
+            // ====================================================================
+            // 4. ESCONDER BOTÃO DE EXPORTAR
+            // ====================================================================
+            document.getElementById('exportButtonContainer').classList.add('hidden');
         }
 
         /**
@@ -1206,7 +1070,7 @@
         function showMessage(message, isError = false) {
             const messageBox = document.getElementById('messageBox');
             messageBox.textContent = message;
-            messageBox.className = 'mt-4 p-3 rounded-md text-sm text-center'; // Reseta classes
+            messageBox.className = 'mt-4 p-3 rounded-md text-sm text-center'; 
             
             if (isError) {
                 messageBox.classList.add('bg-red-100', 'text-red-700');
@@ -1221,27 +1085,126 @@
          * Controla a lógica de troca de abas.
          */
         function openTab(event, tabID) {
-            // Esconde todos os conteúdos
             const tabContents = document.getElementsByClassName('tab-content');
             for (let i = 0; i < tabContents.length; i++) {
                 tabContents[i].classList.remove('active');
             }
             
-            // Remove 'active' de todos os botões
             const tabButtons = document.getElementsByClassName('tab-button');
             for (let i = 0; i < tabButtons.length; i++) {
                 tabButtons[i].classList.remove('active');
             }
             
-            // Mostra o conteúdo da aba clicada e ativa o botão
             document.getElementById(tabID).classList.add('active');
             event.currentTarget.classList.add('active');
         }
 
+
+        // ====================================================================
+        // 3. NOVA FUNÇÃO DE EXPORTAÇÃO
+        // ====================================================================
+        /**
+         * Exporta os dados combinados de links e inventário para um arquivo CSV.
+         */
+        function exportToCSV() {
+            if (links.length === 0) {
+                showMessage("Não há dados para exportar. Gere a topologia primeiro.", true);
+                return;
+            }
+
+            // Função helper para formatar valores para CSV (trata ';' e '"')
+            const quote = (val) => {
+                const str = (val === null || val === undefined) ? '-' : val.toString();
+                // Se o valor contém aspas, ponto-e-vírgula ou quebra de linha, envolve com aspas
+                if (str.includes('"') || str.includes(';') || str.includes('\n')) {
+                    return `"${str.replace(/"/g, '""')}"`;
+                }
+                return str;
+            };
+
+            // Define o cabeçalho do CSV
+            const headers = [
+                // Dados do Link (da tabela Lista de Links)
+                "Cluster", "CEN A", "CEN B", "Produto A", "Produto B", "Polarization",
+                "TDD-POL", "TX Power A/B (dBm)", "Freq. A (MHz)", "Freq. B (MHz)",
+                "TX op-mode A/B", "RSSI (dBm) A/B", "Setor 1 (Azimute)",
+                "Sect-In-Device", "Azimute A (deg)", "Azimute B (deg)",
+                
+                // Dados associados (Inventário)
+                "Node ID A", "IP Rádio A", "PN Rádio A", "SN Rádio A",
+                "Node ID B", "IP Rádio B", "PN Rádio B", "SN Rádio B",
+                
+                "Switch Produto (Node A)", "Switch IP (Node A)", "Switch VLAN (Node A)",
+                "Switch PN (Node A)", "Switch SN (Node A)",
+                
+                "Switch Produto (Node B)", "Switch IP (Node B)", "Switch VLAN (Node B)",
+                "Switch PN (Node B)", "Switch SN (Node B)"
+            ];
+
+            let csvContent = headers.join(';') + '\n';
+
+            // Processa cada linha de link
+            links.forEach(link => {
+                // Pega os dados dos nós (inventário)
+                const nodeA = nodes[link.idA] || {};
+                const nodeB = nodes[link.idB] || {};
+                
+                // Pega seriais dos Rádios (usando os IPs do link)
+                const serialRadioA = serialMap.get(link.ipA) || { serial: '-', partNumber: '-' };
+                const serialRadioB = serialMap.get(link.ipB) || { serial: '-', partNumber: '-' };
+                
+                // Pega seriais dos Switches (usando os IPs dos nós)
+                const serialSwitchA = serialMap.get(nodeA.switchIP) || { serial: '-', partNumber: '-' };
+                const serialSwitchB = serialMap.get(nodeB.switchIP) || { serial: '-', partNumber: '-' };
+
+                // Monta a linha de dados
+                const row = [
+                    // Dados do Link
+                    link.cluster, link.cenA, link.cenB, link.produtoA, link.produtoB,
+                    link.polarization, link.tddPol, link.txPower, link.freqA, link.freqB,
+                    link.txOpMode, link.rssi, link.setor1CalculatedAzimuth,
+                    link.sectInDevice, link.azimuthA, link.azimuthB,
+                    
+                    // Dados Rádio A
+                    link.idA, link.ipA, serialRadioA.partNumber, serialRadioA.serial,
+                    
+                    // Dados Rádio B
+                    link.idB, link.ipB, serialRadioB.partNumber, serialRadioB.serial,
+
+                    // Dados Switch Node A
+                    nodeA.switchProduct, nodeA.switchIP, nodeA.switchVLAN,
+                    serialSwitchA.partNumber, serialSwitchA.serial,
+                    
+                    // Dados Switch Node B
+                    nodeB.switchProduct, nodeB.switchIP, nodeB.switchVLAN,
+                    serialSwitchB.partNumber, serialSwitchB.serial
+                ];
+
+                csvContent += row.map(quote).join(';') + '\n';
+            });
+
+            // Cria e baixa o arquivo
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.setAttribute("href", url);
+            a.setAttribute("download", "Topologia_Completa_SmartRIO.csv");
+            a.style.visibility = "hidden";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+        // ====================================================================
+
+
         // --- Event Listeners ---
         document.getElementById('generateButton').addEventListener('click', handleFiles);
-        // Inicializa o mapa QUANDO A PÁGINA INTEIRA CARREGAR (incluindo scripts)
         window.addEventListener('load', initMap);
+        
+        // ====================================================================
+        // 4. CONECTAR O BOTÃO DE EXPORTAR
+        // ====================================================================
+        document.getElementById('exportButton').addEventListener('click', exportToCSV);
 
     </script>
 </body>
