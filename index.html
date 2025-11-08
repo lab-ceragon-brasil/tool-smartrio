@@ -168,7 +168,8 @@
                 <div class="md:col-span-1">
                     <label for="sectorRadius" class="block text-sm font-medium text-gray-700 mb-1">Raio Setor (m)</label>
                     <select id="sectorRadius" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-md py-2 px-3 focus:ring-blue-500 focus:border-blue-500 transition-colors">
-                        <option value="70" selected>70m</option>
+                        <option value="50" selected>50m</option>
+                        <option value="150">150m</option>
                         <option value="300">300m</option>
                     </select>
                 </div>
@@ -422,37 +423,46 @@
             return text;
         }
         
-        // REVERSÃO: parseCoord (simples) - Lógica da V1.6.0 3.html
-        const parseCoordSimple = (val) => {
+        // REVERSÃO: Função de Coordenadas (V5)
+        // Lida com:
+        // 1. Decimal (ponto ou vírgula): "-22.911617" ou "-22,911617"
+        // 2. Múltiplos pontos (lógica antiga): "-22.911.572" -> -22.911
+        // 3. Inteiro (novo formato): "-22914544" -> -22.914544
+        const parseCoord = (val) => {
             if (!val) return NaN;
-            // Tenta formato (combinado, com vírgula ou ponto)
-            let coord = parseFloat(val.replace(',', '.'));
-            if (!isNaN(coord)) {
-                return coord;
-            }
-            return NaN; // Falha
-        };
-        
-        // REVERSÃO: parseCoord (complexo) - Lógica da V1.6.0 3.html
-        // Tenta formato combinado (ex: "-22,911099")
-        // Se falhar (NaN), tenta formato dividido (ex: "-22" e "911099")
-        const parseCoordComplex = (valCombined, valPart1, valPart2) => {
-            // Tenta formato 1 (combinado, com vírgula ou ponto)
-            let coord = parseFloat(valCombined?.replace(',', '.'));
-            if (!isNaN(coord)) {
-                return coord;
+
+            let str = String(val).trim();
+            const originalStr = str; // Salva o original para checar o formato inteiro
+
+            // 1. Lida com vírgula decimal (ex: "-22,911617" ou "-22.911,572")
+            // Troca vírgula por ponto.
+            str = str.replace(',', '.');
+
+            // 2. Lida com múltiplos pontos (ex: "-22.911.572")
+            // Este era o formato que a lógica antiga tratava.
+            const parts = str.split('.');
+            if (parts.length > 2) {
+                // Era "-22.911.572" -> parts = ["-22", "911", "572"]
+                // Queremos "-22.911"
+                str = `${parts[0]}.${parts[1]}`;
             }
             
-            // Tenta formato 2 (dividido)
-            const partA = valPart1?.trim();
-            const partB = valPart2?.trim();
-            if (partA && partB) {
-                coord = parseFloat(`${partA}.${partB}`);
-                if (!isNaN(coord)) {
-                    return coord;
-                }
+            // Converte para número
+            let coord = parseFloat(str);
+            if (isNaN(coord)) return NaN;
+
+            // 3. Lida com o formato Inteiro (ex: -22914544)
+            // Coordenadas válidas estão entre -180 e 180.
+            // Se for um número gigante, é o formato inteiro.
+            // Usamos a string original para garantir que não tinha um ponto.
+            if ((coord > 180 || coord < -180) && !originalStr.includes('.') && !originalStr.includes(',')) {
+                // Assume que o formato é DDFFFFFF (ex: -22914544)
+                // Divide por 10^6 (1,000,000) para inserir o ponto decimal.
+                return coord / 1000000; // -22.914544
             }
-            return NaN; // Falha
+
+            // Retorna o valor de (1) ou (2)
+            return coord;
         };
 
 
@@ -690,22 +700,13 @@
                 // Pula se não tiver Node IDs ou CENs (agora cenB está preenchido, se necessário)
                 if (!cenA || !cenB || !nodeIDA || !nodeIDB) continue;
 
-                // --- REVERSÃO: Coordenadas (Lógica Híbrida da V1.6.0 3.html) ---
-                // Tenta primeiro o formato "simples" (PREFEITURA-5 / CONSOLIDADO)
-                let latA = parseCoordSimple(row['Node Lat A']);
-                let lonA = parseCoordSimple(row['Node Lon A']);
-                let latB = parseCoordSimple(row['Node Lat B']);
-                let lonB = parseCoordSimple(row['Node Lon B']);
+                // --- ATUALIZAÇÃO: Nova lógica de Coordenadas (V5 - Revertida) ---
+                let latA = parseCoord(row['Node Lat A']);
+                let lonA = parseCoord(row['Node Lon A']);
+                let latB = parseCoord(row['Node Lat B']);
+                let lonB = parseCoord(row['Node Lon B']);
 
-                // Se falhar (NaN), tenta o formato "complexo" (PREFEITURA-2)
-                if (isNaN(latA) || isNaN(lonA) || isNaN(latB) || isNaN(lonB)) {
-                    latA = parseCoordComplex(row['Node Lat A'], row['Node Lat A'], row['Node Lon A']);
-                    lonA = parseCoordComplex(row['Node Lon A'], row['AltitudeMode_A'], row['Height_A (m (feet))']);
-                    latB = parseCoordComplex(row['Node Lat B'], row['Node Lat B'], row['Node Lon B']);
-                    lonB = parseCoordComplex(row['Node Lon B'], row['AltitudeMode_B'], row['Height_B (m (feet))']);
-                }
-                
-                // Se qualquer coordenada falhar *depois* das duas tentativas, pula este link
+                // Se qualquer coordenada falhar, pula este link
                 if (isNaN(latA) || isNaN(lonA) || isNaN(latB) || isNaN(lonB)) {
                     // console.warn(`Coordenadas inválidas para o link ${cenA}-${cenB}. Pulando.`);
                     continue;
@@ -1245,4 +1246,3 @@
     </script>
 </body>
 </html>
-
